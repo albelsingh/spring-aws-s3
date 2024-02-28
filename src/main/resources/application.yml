@@ -1,0 +1,23 @@
+server:
+  port: 8085
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${ACCESS_KEY:AKIAZCKUUP637BEMXVKK}
+      secret-key: ${SECRET_KEY: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}
+    region: ap-south-1
+
+application:
+  bucket:
+    name: 'albel-s3-document'
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      file-size-threshold: 10MB
+      max-request-size: 10MB
+
+
