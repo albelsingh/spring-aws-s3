@@ -4,8 +4,8 @@ server:
 cloud:
   aws:
     credentials:
-      access-key: ${ACCESS_KEY:AKIAZCKUUP637BEMXVKK}
-      secret-key: ${SECRET_KEY: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}
+      access-key: ${ACCESS_KEY:}
+      secret-key: ${SECRET_KEY:}
     region: ap-south-1
 
 application:
