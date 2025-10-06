@@ -18,7 +18,7 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile  file ){
-       return new ResponseEntity<>(fileUploader.uploadFile(file), HttpStatus.OK);
+        return new ResponseEntity<>(fileUploader.uploadFile(file), HttpStatus.OK);
     }
 
     @GetMapping("/download/{file}")

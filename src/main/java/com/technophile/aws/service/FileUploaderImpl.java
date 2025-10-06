@@ -1,9 +1,10 @@
 package com.technophile.aws.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+import com.amazonaws.services.s3.transfer.Upload;
 import com.amazonaws.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,22 @@ public class FileUploaderImpl implements FileUploader {
     AmazonS3 s3Client;
     @Value("${application.bucket.name}")
     private String s3Bucket;
+    @Autowired
+    TransferManager transferManager;
 
     @Override
-    public String uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file) throws InterruptedException, IOException {
         File fileObj = getFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         PutObjectResult result = s3Client.putObject(s3Bucket, fileName, fileObj);
         fileObj.delete();
         log.info("Response :: {}", result);
+        //upload large file
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+        Upload upload = transferManager.upload(s3Bucket, fileName, file.getInputStream(), metadata);
+        upload.waitForCompletion();
         return "File Uploaded successfully " + fileObj;
     }
 

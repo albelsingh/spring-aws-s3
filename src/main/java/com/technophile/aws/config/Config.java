@@ -7,6 +7,8 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,13 @@ public class Config {
         AWSCredentials awsCredentials=new BasicAWSCredentials(accessKey,secretKey);
         return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .withRegion(region).build();
+    }
+
+    @Bean
+    public TransferManager transferManager(AmazonS3 amazonS3) {
+        return TransferManagerBuilder.standard()
+                .withS3Client(amazonS3)
+                .build();
     }
 
 }
